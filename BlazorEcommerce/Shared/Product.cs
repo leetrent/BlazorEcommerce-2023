@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BlazorEcommerce.Shared
 {
@@ -14,6 +15,8 @@ namespace BlazorEcommerce.Shared
         [Required]
         public string ImageUrl { get; set; }
         [Required]
+
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 #pragma warning restore CS8618 
     }
