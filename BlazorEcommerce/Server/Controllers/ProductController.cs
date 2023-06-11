@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BlazorEcommerce.Shared;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorEcommerce.Server.Controllers
@@ -17,7 +18,14 @@ namespace BlazorEcommerce.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Product>>> getProducts()
         {
-            return Ok(await _dbContext.Products.AsNoTracking().ToListAsync());
+            List<Product> products = await _dbContext.Products.AsNoTracking().ToListAsync();
+            var response = new ServiceResponse<List<Product>>()
+            {
+                Data = products,
+                Success = (products != null) ? true : false
+            };        
+            
+            return Ok(response);
         }
     }
 }
