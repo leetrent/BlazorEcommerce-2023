@@ -6,30 +6,38 @@ namespace BlazorEcommerce.Client.Pages
 {
     public partial class ProductDetails
     {
-        private Product? product = null;
-        private string message = String.Empty;
+        [Inject] private HttpClient? WebClient { get; set; }
+        private Product? Product { get; set; }
+        private string Message { get; set; } = String.Empty;
 
         [Parameter]
         public int Id { get; set; }
 
         protected override async Task OnParametersSetAsync()
         {
-            this.message = "Loading product...";
-            ServiceResponse<Product>? result = await Http.GetFromJsonAsync<ServiceResponse<Product>>($"api/product/{Id}");
-            if (result == null)
+            this.Message = "Loading product...";
+            try
             {
-                this.message = "Something went wrong.";
-            }
-            else
-            {
-                if (result.Success)
+                ServiceResponse<Product>? result = await WebClient!.GetFromJsonAsync<ServiceResponse<Product>>($"api/product/{Id}");
+                if (result == null)
                 {
-                    this.product = result.Data;
+                    this.Message = "Something went wrong.";
                 }
                 else
                 {
-                    this.message = result.Message;
+                    if (result.Success)
+                    {
+                        this.Product = result.Data;
+                    }
+                    else
+                    {
+                        this.Message = result.Message;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.Message = $"An error occurred: {ex.Message}";
             }
         }
     }
