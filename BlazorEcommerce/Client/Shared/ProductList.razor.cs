@@ -7,7 +7,7 @@ namespace BlazorEcommerce.Client.Shared
     public partial class ProductList
     {
         [Inject]
-        public IProductServiceClient? ProductServiceClient { get; set; }
+        private IProductServiceClient? ProductServiceClient { get; set; }
 
         private List<Product> Products = new();
         private string Message = String.Empty;
