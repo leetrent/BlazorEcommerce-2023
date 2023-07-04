@@ -1,7 +1,6 @@
 ﻿@page "/"
+@page "/{productCategory}"
 
-<PageTitle>Vegan Merchant</PageTitle>
+<PageTitle>Blazor Ecommerce</PageTitle>
 
-<ProductList />
-
-
+<ProductList Category="@productCategory"></ProductList>

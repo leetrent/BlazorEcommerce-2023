@@ -1,54 +1,21 @@
 ﻿@page "/product/{id:int}"
-@inject HttpClient Http
-
-<h3>ProductDetails</h3>
-
-@if (this.product == null)
+@if (this.Product == null)
 {
-    <span>@this.message</span>
+    <span>@this.Message</span>
 }
 else
 {
     <div class="media">
         <div class="media-img-wrapper mr-2">
-            <img class="media-img" src="@product.ImageUrl" alt="@product.Title" />
+            <img class="media-img" src="@Product.ImageUrl" alt="@Product.Title" />
         </div>
         <div class="media-body">
-            <h2 class="mb-0">@product.Title</h2>
-            <p>@product.Description</p>
-            <h4 class="price">$@product.Price</h4>
+            <h2 class="mb-0">@Product.Title</h2>
+            <p>@Product.Description</p>
+            <h4 class="price">$@Product.Price</h4>
         </div>
     </div>
 }
 
-
-@code {
-    private Product? product = null;
-    private string message = String.Empty;
-
-    [Parameter]
-    public int Id { get; set; }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        this.message = "Loading product...";
-        ServiceResponse<Product>? result = await Http.GetFromJsonAsync<ServiceResponse<Product>>($"api/product/{Id}");
-        if (result == null)
-        {
-            this.message = "Something went wrong.";
-        }
-        else
-        {
-            if (result.Success)
-            {
-                this.product = result.Data;
-            }
-            else
-            {
-                this.message = result.Message;
-            }
-        }
-    }
-}
 
 
