@@ -15,24 +15,22 @@ namespace BlazorEcommerce.Server.Services.ProductService
         {
             return new ServiceResponse<List<Product>>
             {
-                Data = await _dbContext.Products.AsNoTracking().ToListAsync(),
+                Data = await _dbContext.Products
+                                .AsNoTracking()
+                                .Include(p => p.Variants) // don't need product types 
+                                .ToListAsync(),
                 Success = true
             };
         }
 
-        //public async Task<ServiceResponse<Product>> GetProduct(int id)
-        //{
-        //    return new ServiceResponse<Product>
-        //    {
-        //        Data = await _dbContext.Products.AsNoTracking().Where(p => p.Id == id).FirstOrDefaultAsync(),
-        //        Success = true
-        //    };
-        //}
-
         public async Task<ServiceResponse<Product>> GetProduct(int id)
         {
             var response = new ServiceResponse<Product>();
-            Product? product = await _dbContext.Products.FindAsync(id);
+            Product? product = await _dbContext.Products
+                                        .AsNoTracking()
+                                        .Include(p => p.Variants)
+                                        .ThenInclude(v => v.ProductType)
+                                        .FirstOrDefaultAsync(p => p.Id == id);
             if (product == null) 
             { 
                 response.Success = false;
@@ -52,7 +50,11 @@ namespace BlazorEcommerce.Server.Services.ProductService
         {
             return new ServiceResponse<List<Product>>
             {
-                Data = await _dbContext.Products.AsNoTracking().Where(p => p.Category.Url.ToLower().Equals(categoryUrl.ToLower())).ToListAsync(),
+                Data = await _dbContext.Products
+                                .AsNoTracking()
+                                .Where(p => p.Category.Url.ToLower().Equals(categoryUrl.ToLower()))
+                                .Include(p => p.Variants) // don't need product types 
+                                .ToListAsync(),
                 Success = true
             };
         }
