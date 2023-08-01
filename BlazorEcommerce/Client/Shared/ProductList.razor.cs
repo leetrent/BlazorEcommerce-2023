@@ -37,5 +37,23 @@ namespace BlazorEcommerce.Client.Shared
                 this.Message = String.Empty;
             }
         }
+
+        private string GetPriceText(Product product)
+        {
+            List<ProductVariant> productVariants = product.Variants; 
+
+            if (productVariants == null || productVariants.Count == 0)
+            {
+                return String.Empty;
+            }
+
+            if (productVariants.Count() == 1)
+            {
+                return $"${productVariants[0].Price.ToString("F2")}";
+            }
+
+            decimal lowestPrice = productVariants.Min(v => v.Price);
+            return $"Starting at ${lowestPrice}";            
+        }
     }
 }
